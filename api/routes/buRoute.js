@@ -6,15 +6,19 @@ let businessUnitSchema = require('../models/BusinessUnit');
 
 //CREATE BU
 router.route('/AjoutBU').post((req, res, next) => {
+    let response = {
+        status : 'success',
+        message : ''
+    }
     businessUnitSchema.create(req.body, (error, data) => {
         
         if (error) {
-            console.log(error)
-            return next(error)
+           response.status='error'
+           response.message=error.getMessage();
         } else {
-            console.log(data)
-            res.json(data)
+           response.message='Ajouté avec succes';
         }
+        res.json(response);
     })
 });
 

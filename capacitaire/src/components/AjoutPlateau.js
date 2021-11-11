@@ -77,7 +77,7 @@ export const AjoutPlateau = () => {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-md-4"><Form.Label>Libellé</Form.Label></div>
-                            <div className="col-md-7"><Form.Control type="text" value={libelle} onChange={onChangeLibelle} /></div>
+                            <div className="col-md-7"><Form.Control type="text" value={libelle} onChange={onChangeLibelle} required/></div>
                         </div>
                     </div>
                 </Form.Group>
@@ -87,8 +87,8 @@ export const AjoutPlateau = () => {
                         <div className="row">
                             <div className="col-md-4"><Form.Label>Operation</Form.Label></div>
                             <div className="col-md-7">
-                                <Form.Select onChange={onChangeOperation}>
-                                    <option>--Choisir Operation--</option>
+                                <Form.Select onChange={onChangeOperation} required>
+                                    <option value="">--Choisir Operation--</option>
                                     {op.map(a => <option key={a._id} value={a._id}>{a.libelle}</option>)}
                                 </Form.Select>
                             </div>
@@ -100,7 +100,7 @@ export const AjoutPlateau = () => {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-md-4"><Form.Label>Site</Form.Label></div>
-                            <div className="col-md-7"><Form.Control type="text" value={site} onChange={onChangeSite} /></div>
+                            <div className="col-md-7"><Form.Control type="text" value={site} onChange={onChangeSite} required/></div>
                         </div>
                     </div>
                 </Form.Group>
@@ -109,7 +109,7 @@ export const AjoutPlateau = () => {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-md-4"><Form.Label>Capacité</Form.Label></div>
-                            <div className="col-md-7"><Form.Control type="text" value={capacite} onChange={onChangeCapacite} /></div>
+                            <div className="col-md-7"><Form.Control type="text" value={capacite} onChange={onChangeCapacite} required/></div>
                         </div>
                     </div>
                 </Form.Group>
@@ -118,7 +118,7 @@ export const AjoutPlateau = () => {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-md-4"><Form.Label>Nombre de boxes</Form.Label></div>
-                            <div className="col-md-7"><Form.Control type="text" value={boxes} onChange={onChangeBoxes} /></div>
+                            <div className="col-md-7"><Form.Control type="text" value={boxes} onChange={onChangeBoxes} required/></div>
                         </div>
                     </div>
                 </Form.Group>
@@ -127,7 +127,7 @@ export const AjoutPlateau = () => {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-md-4"><Form.Label>Nombre de positions</Form.Label></div>
-                            <div className="col-md-7"><Form.Control type="text" value={positions} onChange={onChangePositions} /></div>
+                            <div className="col-md-7"><Form.Control type="text" value={positions} onChange={onChangePositions} required/></div>
                         </div>
                     </div>
                 </Form.Group>
@@ -136,7 +136,7 @@ export const AjoutPlateau = () => {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-md-4"><Form.Label>Nombre de positions OK</Form.Label></div>
-                            <div className="col-md-7"><Form.Control type="text" value={positionsOK} onChange={onChangePositionsOK} /></div>
+                            <div className="col-md-7"><Form.Control type="text" value={positionsOK} onChange={onChangePositionsOK} required/></div>
                         </div>
                         <div className="row">
                             <div className="col-md-3"></div>

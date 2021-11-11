@@ -50,7 +50,7 @@ export const AjoutProgramme = () => {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-md-3"><Form.Label>Libellé</Form.Label></div>
-                            <div className="col-md-7"><Form.Control type="text" value={libelle} onChange={onChangeLibelle} /></div>
+                            <div className="col-md-7"><Form.Control type="text" value={libelle} onChange={onChangeLibelle} required/></div>
                         </div>
                     </div>
                 </Form.Group>
@@ -60,8 +60,8 @@ export const AjoutProgramme = () => {
                         <div className="row">
                             <div className="col-md-3"><Form.Label>Business Unit</Form.Label></div>
                             <div className="col-md-7">
-                                <Form.Select onChange={onChangeBU}>
-                                    <option>--Choisir Business Unit--</option>
+                                <Form.Select onChange={onChangeBU} required>
+                                    <option value="">--Choisir Business Unit--</option>
                                     {businessUnit.map(a => <option key={a._id} value={a._id}>{a.libelle}</option>)}
                                 </Form.Select>
                             </div>

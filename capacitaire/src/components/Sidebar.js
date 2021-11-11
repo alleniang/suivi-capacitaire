@@ -8,11 +8,10 @@ import {
     CDBSidebarMenuItem,
 } from 'cdbreact';
 import { NavLink, Link } from 'react-router-dom';
-//import { Link } from 'react-router';
 import '../styles/MenuVertical.css';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { BrowserRouter as Switch, Route } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 
 import {AjoutPlateau} from "./AjoutPlateau";
 import {AjoutBU} from "./AjoutBU";
@@ -41,10 +40,10 @@ const Sidebar = () => {
                                     </CDBSidebarMenuItem>
                                 </NavLink>
                                 <div style={{ textAlign: 'center' }}>
-                                    <Link to={"/AjoutBU"} className="nav-link">
+                                    <Link to={"../Composants/AjoutBU"} className="nav-link">
                                         Ajouter
                                     </Link>
-                                    <Link to={"/ListBU"} className="nav-link">
+                                    <Link to={"../Composants/ListBU"} className="nav-link">
                                         Lister
                                     </Link>
                                 </div>
@@ -54,10 +53,10 @@ const Sidebar = () => {
                                     </CDBSidebarMenuItem>
                                 </NavLink>
                                 <div style={{ textAlign: 'center' }}>
-                                    <Link to={"/AjoutProgramme"} className="nav-link">
+                                    <Link to={"../Composants/AjoutProgramme"} className="nav-link">
                                         Ajouter
                                     </Link>
-                                    <Link to={"/ListProgramme"} className="nav-link">
+                                    <Link to={"../Composants/ListProgramme"} className="nav-link">
                                         Lister
                                     </Link>
                                 </div>
@@ -67,10 +66,10 @@ const Sidebar = () => {
                                     </CDBSidebarMenuItem>
                                 </NavLink>
                                 <div style={{ textAlign: 'center' }}>
-                                    <Link to={"/AjoutOperation"} className="nav-link">
+                                    <Link to={"../Composants/AjoutOperation"} className="nav-link">
                                         Ajouter
                                     </Link>
-                                    <Link to={"/ListOperation"} className="nav-link">
+                                    <Link to={"../Composants/ListOperation"} className="nav-link">
                                         Lister
                                     </Link>
                                 </div>
@@ -80,10 +79,10 @@ const Sidebar = () => {
                                     </CDBSidebarMenuItem>
                                 </NavLink>
                                 <div style={{ textAlign: 'center' }}>
-                                    <Link to={"/AjoutPlateau"} className="nav-link">
+                                    <Link to={"../Composants/AjoutPlateau"} className="nav-link">
                                         Ajouter
                                     </Link>
-                                    <Link to={"/ListPlateau"} className="nav-link">
+                                    <Link to={"../Composants/ListPlateau"} className="nav-link">
                                         Lister
                                     </Link>
                                 </div>
@@ -101,14 +100,14 @@ const Sidebar = () => {
                 <div className="wrapper">
                     <Switch>
                         <Route exact path='/' component={AjoutPlateau} />
-                        <Route path="/AjoutPlateau" component={AjoutPlateau} />
-                        <Route path="/AjoutBU" component={AjoutBU} />
-                        <Route path="/AjoutProgramme" component={AjoutProgramme} />
-                        <Route path="/AjoutOperation" component={AjoutOperation} />
-                        <Route path="/ListBU" component={ListBu} />
-                        <Route path="/ListProgramme" component={ListProgramme} />
-                        <Route path="/ListOperation" component={ListOperation} />
-                        <Route path="/ListPlateau" component={ListPlateau} />
+                        <Route path="/Composants/AjoutPlateau" component={AjoutPlateau} />
+                        <Route path="/Composants/AjoutBU" component={AjoutBU} />
+                        <Route path="/Composants/AjoutProgramme" component={AjoutProgramme} />
+                        <Route path="/Composants/AjoutOperation" component={AjoutOperation} />
+                        <Route path="/Composants/ListBU" component={ListBu} />
+                        <Route path="/Composants/ListProgramme" component={ListProgramme} />
+                        <Route path="/Composants/ListOperation" component={ListOperation} />
+                        <Route path="/Composants/ListPlateau" component={ListPlateau} />
                     </Switch>
                 </div>
             </Col>

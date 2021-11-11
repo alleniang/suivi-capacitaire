@@ -52,7 +52,7 @@ export const AjoutOperation = () => {
                         
                         <div className="row">
                             <div className="col-md-3"><Form.Label>Libellé</Form.Label></div>
-                            <div className="col-md-7"><Form.Control type="text" value={libelle} onChange={onChangeLibelle} /></div>
+                            <div className="col-md-7"><Form.Control type="text" value={libelle} onChange={onChangeLibelle} required/></div>
                         </div>
                     </div>
                 </Form.Group>
@@ -62,8 +62,8 @@ export const AjoutOperation = () => {
                         <div className="row">
                             <div className="col-md-3"><Form.Label>Programme</Form.Label></div>
                             <div className="col-md-7">
-                                <Form.Select onChange={onChangeProgramme}>
-                                    <option>--Choisir Programme--</option>
+                                <Form.Select onChange={onChangeProgramme}required>
+                                    <option value="">--Choisir Programme--</option>
                                     {prog.map(a => <option key={a._id} value={a._id}>{a.libelle}</option>)}
                                 </Form.Select>
                             </div>

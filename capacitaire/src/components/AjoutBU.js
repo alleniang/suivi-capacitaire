@@ -21,11 +21,11 @@ export const AjoutBU = () => {
             libelle
         }
 
-        console.log(`Business Unit successfully created!`);
-        console.log(`libelle: ${libelle}`);
-
         axios.post(`${serverUrl}/businessUnit/AjoutBU`, businessUnitObject)
-            .then(res => console.log(res.data));
+            .then(res => {
+                let response = res.data;
+                alert(response.message);
+            });
 
         setLibelle('')
         e.preventDefault()
@@ -40,7 +40,7 @@ export const AjoutBU = () => {
                     <div className="form-group">
                         <div className="row">
                             <div className="col-md-2"><Form.Label>Libellé</Form.Label></div>
-                            <div className="col-md-7"><Form.Control  type="text" value={libelle} onChange={onChangeLibelle} /></div>
+                            <div className="col-md-7"><Form.Control  type="text" value={libelle} onChange={onChangeLibelle} required/></div>
                         </div>
                         <div className="row">
                             <div className="col-md-1"></div>
