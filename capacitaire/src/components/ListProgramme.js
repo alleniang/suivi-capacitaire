@@ -5,7 +5,7 @@ import client from '../api/client';
 import {serverUrl} from '../api/params';
 
 
-export const ListProgramme = () => {
+export default function ListProgramme () {
     const [programmes, setProgrammes] = useState([])
     const [bu, setBu] = useState([])
 
@@ -22,7 +22,6 @@ export const ListProgramme = () => {
 
         fetchMyAPI()
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []); 
 
     const getBUById = id => {

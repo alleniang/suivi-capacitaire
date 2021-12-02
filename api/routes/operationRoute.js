@@ -57,7 +57,7 @@ router.route('/update-Plateau/:id').put((req, res, next) => {
 })
 
 // Delete OP
-router.route('/delete-Plateau/:id').delete((req, res, next) => {
+router.route('/delete-Operation/:id').delete((req, res, next) => {
     operationSchema.findByIdAndRemove(req.params.id, (error, data) => {
         if (error) {
             return next(error);

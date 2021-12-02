@@ -56,7 +56,7 @@ router.route('/update-Plateau/:id').put((req, res, next) => {
 
 // Delete Plateau
 router.route('/delete-Plateau/:id').delete((req, res, next) => {
-    studentSchema.findByIdAndRemove(req.params.id, (error, data) => {
+    plateauSchema.findByIdAndRemove(req.params.id, (error, data) => {
         if (error) {
             return next(error);
         } else {

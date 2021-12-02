@@ -13,16 +13,16 @@ let plateauSchema = new Schema({
         type: String
     },
     capacite:{
-        type: String
+        type: Number
     },
     boxes:{
-        type: String
+        type: Number
     },
     positions:{
-        type: String
+        type: Number
     },
     positionsOK:{
-        type: String
+        type: Number
     },
 }, {
     collection: 'plateau'

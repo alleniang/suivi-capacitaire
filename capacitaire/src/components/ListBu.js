@@ -5,7 +5,7 @@ import { Navbar } from 'react-bootstrap';
 import {serverUrl} from '../api/params';
 
 
-export const ListBu = () => {
+export default function ListBu () {
     const [bu, setBu] = useState([])
 
     useEffect(() => {

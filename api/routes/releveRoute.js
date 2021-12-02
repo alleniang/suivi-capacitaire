@@ -2,15 +2,15 @@ let mongoose = require('mongoose'),
 express = require('express'),
 router = express.Router();
 
-let businessUnitSchema = require('../models/BusinessUnit');
+let releveTempSchema = require('../models/ReleveTemp');
 
-//CREATE BU
-router.route('/AjoutBU').post((req, res, next) => {
+//CREATE RELEVE
+router.route('/AjoutReleve').post((req, res, next) => {
     let response = {
         status : 'success',
         message : ''
     }
-    businessUnitSchema.create(req.body, (error, data) => {
+    releveTempSchema.create(req.body, (error, data) => {
         
         if (error) {
            response.status='error'
@@ -22,9 +22,9 @@ router.route('/AjoutBU').post((req, res, next) => {
     })
 });
 
-//READ BU
-router.route('/ListBU').get((req, res) => {
-    businessUnitSchema.find((error, data) => {
+//READ RELEVE
+router.route('/ListReleve').get((req, res) => {
+    releveTempSchema.find((error, data) => {
         if (error) {
             return next(error)
         } else {
@@ -33,7 +33,7 @@ router.route('/ListBU').get((req, res) => {
     })
 })
 
-// Get Single BU
+// Get Single RELEVE
 router.route('/ListBU/:id').get((req, res) => {
     businessUnitSchema.findById(req.params.id, (error, data) => {
         if (error) {
@@ -45,7 +45,7 @@ router.route('/ListBU/:id').get((req, res) => {
 })
 
 
-// Update BU
+// Update RELEVE
 router.route('/update-Plateau/:id').put((req, res, next) => {
     businessUnitSchema.findByIdAndUpdate(req.params.id, {
         $set: req.body
@@ -55,13 +55,13 @@ router.route('/update-Plateau/:id').put((req, res, next) => {
             console.log(error)
         } else {
             res.json(data)
-            console.log('Bu updated successfully !')
+            console.log('Plateau updated successfully !')
         }
     })
 })
 
-// Delete BU
-router.route('/delete-Bu/:id').delete((req, res, next) => {
+// Delete RELEVE
+router.route('/delete-Plateau/:id').delete((req, res, next) => {
     businessUnitSchema.findByIdAndRemove(req.params.id, (error, data) => {
         if (error) {
             return next(error);

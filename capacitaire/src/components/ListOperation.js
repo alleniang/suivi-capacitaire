@@ -5,7 +5,7 @@ import client from '../api/client';
 import {serverUrl} from '../api/params';
 
 
-export const ListOperation = () => {
+export default function ListOperation () {
     const [operation, setOperation] = useState([])
     const [programme, setProgramme] = useState([])
 

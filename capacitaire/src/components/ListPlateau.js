@@ -5,7 +5,7 @@ import client from '../api/client';
 import {serverUrl} from '../api/params';
 
 
-export const ListPlateau = () => {
+export default function ListPlateau () {
     const [plateau, setPlateau] = useState([]);
     const [operation, setOperation] = useState([]);
 

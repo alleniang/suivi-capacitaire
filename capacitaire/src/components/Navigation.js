@@ -1,5 +1,6 @@
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import Sidebar from './Sidebar';
+import Climatisation from './Climatisatio';
 import w2c from '../assets/way2call.png';
 import { Switch, Route } from "react-router-dom";
 
@@ -32,7 +33,7 @@ function Navigation() {
                 <Switch>
                     <Route exact path='/' />
                     <Route path="/Composants" component={Sidebar} />
-                    <Route path="/Climatisation" component={Sidebar} />
+                    <Route path="/Climatisation" component={Climatisation} />
                    
                     
                 </Switch>

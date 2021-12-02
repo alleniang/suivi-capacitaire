@@ -17,6 +17,8 @@ var plateauRoute = require('./routes/plateauRoute');
 var buRoute = require('./routes/buRoute');
 var programmeRoute = require('./routes/programmeRoute');
 var operationRoute = require('./routes/operationRoute');
+var releveRoute = require('./routes/releveRoute');
+var climatiseurRoute = require('./routes/climatiseurRoute');
 
 
 var app = express();
@@ -46,6 +48,8 @@ app.use('/plateau', plateauRoute);
 app.use('/businessUnit', buRoute);
 app.use('/programme', programmeRoute);
 app.use('/operation', operationRoute);
+app.use('/releveTemp', releveRoute);
+app.use('/climatiseur', climatiseurRoute);
 app.use('/api/auth', userRoutes);
 
 // catch 404 and forward to error handler

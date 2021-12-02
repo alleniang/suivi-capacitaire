@@ -2,11 +2,11 @@ let mongoose = require('mongoose'),
 express = require('express'),
 router = express.Router();
 
-let programmeSchema = require('../models/Programme');
+let climatiseurSchema = require('../models/Climatiseur');
 
-//CREATE Programme
-router.route('/AjoutProgramme').post((req, res, next) => {
-    programmeSchema.create(req.body, (error, data) => {
+//CREATE Climatiseur
+router.route('/AjoutClimatiseur').post((req, res, next) => {
+    climatiseurSchema.create(req.body, (error, data) => {
         
         if (error) {
             console.log(error)
@@ -18,9 +18,9 @@ router.route('/AjoutProgramme').post((req, res, next) => {
     })
 });
 
-//READ Programme
-router.route('/ListProgramme').get((req, res) => {
-    programmeSchema.find((error, data) => {
+//READ Climatiseur
+router.route('/ListClimatiseur').get((req, res) => {
+    climatiseurSchema.find((error, data) => {
         if (error) {
             return next(error)
         } else {
@@ -29,9 +29,9 @@ router.route('/ListProgramme').get((req, res) => {
     })
 })
 
-// Get Single Programme
-router.route('/edit-Plateau/:id').get((req, res) => {
-    studentSchema.findById(req.params.id, (error, data) => {
+// Get Single Climatiseur
+router.route('/edit-Climatiseur/:id').get((req, res) => {
+    climatiseurSchema.findById(req.params.id, (error, data) => {
         if (error) {
             return next(error)
         } else {
@@ -41,9 +41,9 @@ router.route('/edit-Plateau/:id').get((req, res) => {
 })
 
 
-// Update Programme
-router.route('/update-Plateau/:id').put((req, res, next) => {
-    studentSchema.findByIdAndUpdate(req.params.id, {
+// Update Climatiseur
+router.route('/update-Climatiseur/:id').put((req, res, next) => {
+    climatiseurSchema.findByIdAndUpdate(req.params.id, {
         $set: req.body
     }, (error, data) => {
         if (error) {
@@ -56,9 +56,9 @@ router.route('/update-Plateau/:id').put((req, res, next) => {
     })
 })
 
-// Delete Programme
-router.route('/delete-Programme/:id').delete((req, res, next) => {
-    programmeSchema.findByIdAndRemove(req.params.id, (error, data) => {
+// Delete Climatiseur
+router.route('/delete-Climatiseur/:id').delete((req, res, next) => {
+    climatiseurSchema.findByIdAndRemove(req.params.id, (error, data) => {
         if (error) {
             return next(error);
         } else {

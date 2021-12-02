@@ -1,157 +1,140 @@
-import React, { useEffect, useState } from "react";
-import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button';
+import React, { useEffect, useState } from 'react';
+import { useFormik, FormikProvider } from 'formik';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import { serverUrl } from '../api/params';
 import axios from 'axios';
-import {serverUrl} from '../api/params';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+
 
 export const AjoutPlateau = () => {
-    const [libelle, setLibelle] = useState()
-    const [op, setOp] = useState([])
-    const [operation, setOperation] = useState()
-    const [site, setSite] = useState()
-    const [capacite, setCapacite] = useState()
-    const [boxes, setBoxes] = useState()
-    const [positions, setPositions] = useState()
-    const [positionsOK, setPositionsOK] = useState()
 
+    const [programme, setProgramme] = useState([])
+    const formik = useFormik({
+        initialValues: {
+            libelle: 'ssssss',
+            operation: '',
+            site: '',
+            capacite: '',
+            boxes: '',
+            positions: '',
+            positionsOK: '',
 
-    const onChangeLibelle = (e) => setLibelle(e.target.value)
-    const onChangeOperation = (e) => setOperation(e.target.value)
-    const onChangeSite = (e) => setSite(e.target.value)
-    const onChangeCapacite = (e) => setCapacite(e.target.value)
-    const onChangeBoxes = (e) => setBoxes(e.target.value)
-    const onChangePositions = (e) => setPositions(e.target.value)
-    const onChangePositionsOK = (e) => setPositionsOK(e.target.value)
+        },
+        onSubmit: values => {
+            axios.post(`${serverUrl}/plateau/AjoutPlateau`, values)
+                .then(res => console.log(res.data));
 
-
-    const onSubmit = e => {
-
-        const plateauObject = {
-            libelle,
-            operation,
-            site,
-            capacite,
-            boxes,
-            positions,
-            positionsOK,
-        }
-
-        console.log(`Plateau successfully created!`);
-        console.log(`libelle: ${libelle}`);
-        console.log(`operation: ${operation}`);
-        console.log(`site: ${site}`);
-        console.log(`capacite: ${capacite}`);
-        console.log(`boxes: ${boxes}`);
-        console.log(`positions: ${positions}`);
-        console.log(`positions OK: ${positionsOK}`);
-
-        axios.post(`${serverUrl}/plateau/AjoutPlateau`, plateauObject)
-            .then(res => console.log(res.data));
-
-        setLibelle('')
-        setOperation('')
-        setOp([])
-        setSite('')
-        setCapacite('')
-        setBoxes('')
-        setPositions('')
-        setPositionsOK('')
-        e.preventDefault()
-    }
-
-
+            console.log(values)
+            alert(JSON.stringify(values, null, 2));
+        },
+    })
     useEffect(() => {
         axios.get(`${serverUrl}/operation/ListOperation`)
-            .then(res => setOp(res.data));
-    },[]);
+            .then(res => setProgramme(res.data));
+    }, []);
 
-
+    
     return (
-        <div className="form-wrapper">
+        <FormikProvider value={formik}>
+            <row>
 
-            <br />
+                <form onSubmit={formik.handleSubmit}>
+                    <TextField
+                        id="libelle"
+                        label="Libelle"
+                        variant="outlined"
+                        size="small"
+                        onChange={formik.handleChange}
+                        required
+                    />
+                    &nbsp;&nbsp;
+                    <FormControl sx={{ minWidth: 222 }}>
+                        <InputLabel id="programme">Opération*</InputLabel>
+                        <Select
+                            labelId="operation"
+                            id="operation"
+                            size="small"
+                            variant="outlined"
+                            label="operation"
+                            onChange={formik.handleChange}
+                            name="operation"
+                            required
+                        >
+                            {programme.map(p => <MenuItem key={p._id} value={p._id}>{p.libelle}</MenuItem>)}
+                        </Select>
+                    </FormControl>
+                    <br />
+                    <br />
+                    <FormControl sx={{ m: 0, minWidth: 222 }}>
+                        <InputLabel id="site">Site*</InputLabel>
+                        <Select
+                            labelId="site"
+                            id="site"
+                            size="small"
+                            variant="outlined"
+                            label="site"
+                            onChange={formik.handleChange}
+                            name="site"
+                            required
+                        >
+                            <MenuItem value="4C">4C</MenuItem>
+                            <MenuItem value="PA">PA</MenuItem>
+                        </Select>
+                    </FormControl>
+                    &nbsp;&nbsp;
 
-            <Form onSubmit={onSubmit}>
-
-                <Form.Group controlId="Libelle">
-                    <div className="form-group">
-                        <div className="row">
-                            <div className="col-md-4"><Form.Label>Libellé</Form.Label></div>
-                            <div className="col-md-7"><Form.Control type="text" value={libelle} onChange={onChangeLibelle} required/></div>
-                        </div>
-                    </div>
-                </Form.Group>
-
-                <Form.Group controlId="Operation">
-                    <div className="form-group">
-                        <div className="row">
-                            <div className="col-md-4"><Form.Label>Operation</Form.Label></div>
-                            <div className="col-md-7">
-                                <Form.Select onChange={onChangeOperation} required>
-                                    <option value="">--Choisir Operation--</option>
-                                    {op.map(a => <option key={a._id} value={a._id}>{a.libelle}</option>)}
-                                </Form.Select>
-                            </div>
-                        </div>
-                    </div>
-                </Form.Group>
-
-                <Form.Group controlId="Site">
-                    <div className="form-group">
-                        <div className="row">
-                            <div className="col-md-4"><Form.Label>Site</Form.Label></div>
-                            <div className="col-md-7"><Form.Control type="text" value={site} onChange={onChangeSite} required/></div>
-                        </div>
-                    </div>
-                </Form.Group>
-
-                <Form.Group controlId="Capacite">
-                    <div className="form-group">
-                        <div className="row">
-                            <div className="col-md-4"><Form.Label>Capacité</Form.Label></div>
-                            <div className="col-md-7"><Form.Control type="text" value={capacite} onChange={onChangeCapacite} required/></div>
-                        </div>
-                    </div>
-                </Form.Group>
-
-                <Form.Group controlId="Boxes">
-                    <div className="form-group">
-                        <div className="row">
-                            <div className="col-md-4"><Form.Label>Nombre de boxes</Form.Label></div>
-                            <div className="col-md-7"><Form.Control type="text" value={boxes} onChange={onChangeBoxes} required/></div>
-                        </div>
-                    </div>
-                </Form.Group>
-
-                <Form.Group controlId="Positions">
-                    <div className="form-group">
-                        <div className="row">
-                            <div className="col-md-4"><Form.Label>Nombre de positions</Form.Label></div>
-                            <div className="col-md-7"><Form.Control type="text" value={positions} onChange={onChangePositions} required/></div>
-                        </div>
-                    </div>
-                </Form.Group>
-
-                <Form.Group controlId="PositionsOK">
-                    <div className="form-group">
-                        <div className="row">
-                            <div className="col-md-4"><Form.Label>Nombre de positions OK</Form.Label></div>
-                            <div className="col-md-7"><Form.Control type="text" value={positionsOK} onChange={onChangePositionsOK} required/></div>
-                        </div>
-                        <div className="row">
-                            <div className="col-md-3"></div>
-                            <div className="col-md-7 mt-4">
-                                <Button variant="primary" size="lg" block="block" type="submit">
-                                    Ajouter Plateau
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </Form.Group>
-
-            </Form>
-
-        </div>
-
+                    <TextField
+                        id="capacite"
+                        label="Capacité"
+                        variant="outlined"
+                        size="small"
+                        onChange={formik.handleChange}
+                        required
+                    />
+                    <br />
+                    <br />
+                    <TextField
+                        id="boxes"
+                        label="Boxes"
+                        variant="outlined"
+                        size="small"
+                        onChange={formik.handleChange}
+                        required
+                    />
+                    &nbsp;&nbsp;
+                    <TextField
+                        id="positions"
+                        label="Positions"
+                        variant="outlined"
+                        size="small"
+                        onChange={formik.handleChange}
+                        required
+                    />
+                    <br />
+                    <br />
+                    <center>
+                        <TextField
+                            id="positionsOK"
+                            label="Positions OK"
+                            variant="outlined"
+                            size="small"
+                            onChange={formik.handleChange}
+                            required
+                        />
+                    </center>
+                    <br />
+                    
+                    <center>
+                        <Button type="submit" variant="contained" size="medium">
+                            Ajouter
+                        </Button>
+                    </center>
+                </form>
+            </row>
+        </FormikProvider >
     );
-}
+};
