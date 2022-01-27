@@ -30,8 +30,8 @@ router.route('/ListProgramme').get((req, res) => {
 })
 
 // Get Single Programme
-router.route('/edit-Plateau/:id').get((req, res) => {
-    studentSchema.findById(req.params.id, (error, data) => {
+router.route('/edit-programme/:id').get((req, res) => {
+    programmeSchema.findById(req.params.id, (error, data) => {
         if (error) {
             return next(error)
         } else {
@@ -42,8 +42,8 @@ router.route('/edit-Plateau/:id').get((req, res) => {
 
 
 // Update Programme
-router.route('/update-Plateau/:id').put((req, res, next) => {
-    studentSchema.findByIdAndUpdate(req.params.id, {
+router.route('/update-programme/:id').put((req, res, next) => {
+    programmeSchema.findByIdAndUpdate(req.params.id, {
         $set: req.body
     }, (error, data) => {
         if (error) {
@@ -51,7 +51,7 @@ router.route('/update-Plateau/:id').put((req, res, next) => {
             console.log(error)
         } else {
             res.json(data)
-            console.log('Plateau updated successfully !')
+            console.log('Programme updated successfully !')
         }
     })
 })

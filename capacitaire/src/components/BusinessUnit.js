@@ -7,8 +7,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
+import client from '../api/client';
 import axios from 'axios';
 import { serverUrl } from '../api/params';
+import { useFormik, FormikProvider } from 'formik';
 import { useEffect, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -17,9 +19,9 @@ import Modal from '@mui/material/Modal';
 import { red, blue } from '@mui/material/colors';
 import Button from '@mui/material/Button';
 import { AjoutBU } from './AjoutBU';
-//import { EditBU } from './EditBU';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import TextField from '@mui/material/TextField';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -59,7 +61,7 @@ const style = {
 export default function BusinessUnit() {
     const [bu, setBu] = useState([])
     const [programme, setProgramme] = useState([])
-
+    const [modalData, setModalData] = useState()
 
     useEffect(() => {
         axios.get(`${serverUrl}/businessUnit/ListBU`)
@@ -83,6 +85,25 @@ export default function BusinessUnit() {
             .then(res => setBu(res.data));
     };
 
+    const [openM, setOpenM] = React.useState(false);
+    const handleOpenM = (row) => {
+        setModalData(row)
+        setOpenM(true);
+    };
+
+    const handleCloseM = () => {
+        setOpenM(false);
+        async function fetchMyAPI() {
+
+            const listBu = await client.get(`${serverUrl}/businessUnit/ListBU`);
+            setBu(listBu.data);
+
+        }
+
+        fetchMyAPI()
+
+    };
+
     const deleteBU = (row) => {
 
         const result = programme.some(p => p.bU === row._id)
@@ -94,9 +115,32 @@ export default function BusinessUnit() {
                     .then(res => setBu(res.data));
             }
         }
-    
+
     }
-    
+
+    const formik = useFormik({
+        initialValues: {
+            libelle: modalData && modalData.libelle,
+        },
+
+        onSubmit: values => {
+            axios.put(`${serverUrl}/businessUnit/update-bu/${modalData._id}`, values)
+                .then(res => {
+                    alert('Modification réussie !');
+                });
+
+            async function fetchMyAPI() {
+
+                const listBu = await client.get(`${serverUrl}/businessUnit/ListBU`);
+                setBu(listBu.data);
+
+            }
+
+            fetchMyAPI()
+
+            setOpenM(false);
+        },
+    })
 
     return (
         <div>
@@ -116,6 +160,43 @@ export default function BusinessUnit() {
 
                 </Box>
             </Modal>
+            <Modal
+                open={openM}
+                onClose={handleCloseM}
+                aria-labelledby="parent-modal-title"
+                aria-describedby="parent-modal-description"
+            >
+                <Box sx={{ ...style, width: 400 }}>
+                    <div align="right"><Button onClick={handleCloseM}><CloseIcon sx={{ color: blue[500] }} /></Button></div>
+                    <h2 id="parent-modal-title" align="center">Modifier Business Unit</h2>
+                    <p id="parent-modal-description">
+                        <FormikProvider value={formik}>
+                            <row>
+                                <form onSubmit={formik.handleSubmit}>
+                                    <TextField
+                                        id="libelle"
+                                        label="Libelle"
+                                        variant="outlined"
+                                        value={formik.values.libelle}
+                                        defaultValue={modalData && modalData.libelle}
+                                        size="small"
+                                        onChange={formik.handleChange}
+                                        required
+                                    />
+                                    
+                                    <br />
+                                    <br />
+                                    <center>
+                                        <Button type="submit" variant="contained" size="medium">
+                                            Modifier
+                                        </Button>
+                                    </center>
+                                </form>
+                            </row>
+                        </FormikProvider >
+                    </p>
+                </Box>
+            </Modal>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
                     <TableHead>
@@ -133,7 +214,7 @@ export default function BusinessUnit() {
                                 </StyledTableCell>
                                 <StyledTableCell align="right">
                                     <IconButton aria-label="Edit" >
-                                        <EditIcon sx={{ color: blue[500] }} />
+                                        <EditIcon sx={{ color: blue[500] }} onClick={() => { handleOpenM(row) }} />
                                     </IconButton>
                                     <IconButton aria-label="delete" onClick={() => deleteBU(row)}>
                                         <DeleteIcon sx={{ color: red[400] }} />

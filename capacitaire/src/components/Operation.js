@@ -10,6 +10,7 @@ import Paper from '@mui/material/Paper';
 import client from '../api/client';
 import { serverUrl } from '../api/params';
 import { useEffect, useState } from "react";
+import { useFormik, FormikProvider } from 'formik';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
@@ -20,6 +21,11 @@ import IconButton from '@mui/material/IconButton';
 import { AjoutOperation } from './AjoutOperation';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -59,7 +65,10 @@ const style = {
 export default function Programme() {
     const [programme, setProgramme] = useState([])
     const [operation, setOperation] = useState([])
+    const [modalData, setModalData] = useState()
     const [plateau, setPlateau] = useState([])
+    const [capacitaire, setCapacitaire] = useState([])
+    const [appels, setAppels] = useState([])
 
 
     useEffect(() => {
@@ -73,6 +82,12 @@ export default function Programme() {
 
             const listPlateau = await client.get(`${serverUrl}/plateau/ListPlateau`);
             setPlateau(listPlateau.data);
+
+            const listCapacitaire = await client.get(`${serverUrl}/previsions/Capacitaire/ListCapacitaire`);
+            setCapacitaire(listCapacitaire.data);
+
+            const listAppels = await client.get(`${serverUrl}/previsions/Appels/ListAppels`);
+            setAppels(listAppels.data);
 
         }
 
@@ -108,10 +123,34 @@ export default function Programme() {
 
     };
 
+    const [openM, setOpenM] = React.useState(false);
+    const handleOpenM = (row) => {
+        setModalData(row)
+        setOpenM(true);
+    };
+
+    const handleCloseM = () => {
+        setOpenM(false);
+        async function fetchMyAPI() {
+
+            const listProgram = await client.get(`${serverUrl}/programme/ListProgramme`);
+            setProgramme(listProgram.data);
+
+            const listOperation = await client.get(`${serverUrl}/operation/ListOperation`);
+            setOperation(listOperation.data);
+
+        }
+
+        fetchMyAPI()
+
+    };
+
     const deleteOperation = (row) => {
 
-        const result = plateau.some(pl => pl.operation === row._id)
-        if (!result) {
+        const result1 = plateau.some(pl => pl.operation === row._id)
+        const result2 = capacitaire.some(c => c.operation === row._id)
+        const result3 = appels.some(a => a.operation === row._id)
+        if (!result1 && !result2 && !result3) {
             if (window.confirm("Voulez vous vraiment supprimer ?")) {
                 axios.delete(`${serverUrl}/operation/delete-Operation/${row._id}`)
                     .then(alert(`${row.libelle} supprimé !!!`));
@@ -135,6 +174,34 @@ export default function Programme() {
 
     }
 
+    const formik = useFormik({
+        initialValues: {
+            libelle: modalData && modalData.libelle,
+            programme: modalData && modalData.programme,
+        },
+
+        onSubmit: values => {
+            axios.put(`${serverUrl}/operation/update-Operation/${modalData._id}`, values)
+                .then(res => {
+                    alert('Modification réussie !');
+                });
+
+            async function fetchMyAPI() {
+
+                const listProgram = await client.get(`${serverUrl}/programme/ListProgramme`);
+                setProgramme(listProgram.data);
+
+                const listOperation = await client.get(`${serverUrl}/operation/ListOperation`);
+                setOperation(listOperation.data);
+
+            }
+
+            fetchMyAPI()
+
+            setOpenM(false);
+        },
+    })
+
     return (
         <div>
             <div align="right"><Button sx={{ color: blue[900] }} onClick={handleOpen}>Ajouter</Button></div>
@@ -151,6 +218,61 @@ export default function Programme() {
                         <AjoutOperation />
                     </p>
 
+                </Box>
+            </Modal>
+            <Modal
+                open={openM}
+                onClose={handleCloseM}
+                aria-labelledby="parent-modal-title"
+                aria-describedby="parent-modal-description"
+            >
+                <Box sx={{ ...style, width: 400 }}>
+                    <div align="right"><Button onClick={handleCloseM}><CloseIcon sx={{ color: blue[500] }} /></Button></div>
+                    <h2 id="parent-modal-title" align="center">Modifier Opération</h2>
+                    <p id="parent-modal-description">
+                        <FormikProvider value={formik}>
+                            <row>
+                                <form onSubmit={formik.handleSubmit}>
+                                    <TextField
+                                        id="libelle"
+                                        label="Libelle"
+                                        variant="outlined"
+                                        value={formik.values.libelle}
+                                        defaultValue={modalData && modalData.libelle}
+                                        size="small"
+                                        onChange={formik.handleChange}
+                                        required
+                                    />
+                                    <br />
+                                    <br />
+                                    <FormControl sx={{ m: 0, minWidth: 225 }}>
+                                        <InputLabel id="programme">Programme*</InputLabel>
+                                        <Select
+                                            labelId="programme"
+                                            id="programme"
+                                            size="small"
+                                            variant="outlined"
+                                            value={formik.values.programme}
+                                            defaultValue={modalData && modalData.programme}
+                                            label="programme"
+                                            onChange={formik.handleChange}
+                                            name="programme"
+                                            required
+                                        >
+                                            {programme.map(p => <MenuItem key={p._id} value={p._id}>{p.libelle}</MenuItem>)}
+                                        </Select>
+                                    </FormControl>
+                                    <br />
+                                    <br />
+                                    <center>
+                                        <Button type="submit" variant="contained" size="medium">
+                                            Modifier
+                                        </Button>
+                                    </center>
+                                </form>
+                            </row>
+                        </FormikProvider >
+                    </p>
                 </Box>
             </Modal>
             <TableContainer component={Paper}>
@@ -172,7 +294,7 @@ export default function Programme() {
                                 <StyledTableCell >{getProgrammeById(row.programme)}</StyledTableCell>
                                 <StyledTableCell align="right">
                                     <IconButton aria-label="Edit" >
-                                        <EditIcon sx={{ color: blue[500] }} />
+                                        <EditIcon sx={{ color: blue[500] }} onClick={() => { handleOpenM(row) }} />
                                     </IconButton>
                                     <IconButton aria-label="delete" onClick={() => deleteOperation(row)}>
                                         <DeleteIcon sx={{ color: red[400] }} />

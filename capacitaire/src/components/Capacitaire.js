@@ -15,9 +15,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { red, blue } from '@mui/material/colors';
-import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
-import { AjoutPlateau } from './AjoutPlateau';
+import IconButton from '@mui/material/IconButton';
+import { AjoutCapacitaire } from './AjoutCapacitaire';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
 import { useFormik, FormikProvider } from 'formik';
@@ -61,14 +61,10 @@ const style = {
     pb: 3,
 };
 
-export default function Plateau() {
-    const [plateau, setPlateau] = useState([])
+export default function Capacitaire() {
+    const [capacitaire, setCapacitaire] = useState([])
     const [operation, setOperation] = useState([])
     const [modalData, setModalData] = useState()
-    const [temperature, setTemperature] = useState([])
-    const [climatiseur, setClimatiseur] = useState([])
-    //setModalData(plateau[0])
-
 
     useEffect(() => {
         async function fetchMyAPI() {
@@ -76,14 +72,9 @@ export default function Plateau() {
             const listOperation = await client.get(`${serverUrl}/operation/ListOperation`);
             setOperation(listOperation.data);
 
-            const listPlateau = await client.get(`${serverUrl}/plateau/ListPlateau`);
-            setPlateau(listPlateau.data);
+            const listCapacitaire = await client.get(`${serverUrl}/previsions/Capacitaire/ListCapacitaire`);
+            setCapacitaire(listCapacitaire.data);
 
-            const listTemperature = await client.get(`${serverUrl}/releveTemp/ListReleve`);
-            setTemperature(listTemperature.data);
-
-            const listClimatiseur = await client.get(`${serverUrl}/climatiseur/ListClimatiseur`);
-            setClimatiseur(listClimatiseur.data);
         }
 
         fetchMyAPI()
@@ -107,8 +98,9 @@ export default function Plateau() {
             const listOperation = await client.get(`${serverUrl}/operation/ListOperation`);
             setOperation(listOperation.data);
 
-            const listPlateau = await client.get(`${serverUrl}/plateau/ListPlateau`);
-            setPlateau(listPlateau.data);
+            const listCapacitaire = await client.get(`${serverUrl}/previsions/Capacitaire/ListCapacitaire`);
+            setCapacitaire(listCapacitaire.data);
+
         }
 
         fetchMyAPI()
@@ -128,8 +120,8 @@ export default function Plateau() {
             const listOperation = await client.get(`${serverUrl}/operation/ListOperation`);
             setOperation(listOperation.data);
 
-            const listPlateau = await client.get(`${serverUrl}/plateau/ListPlateau`);
-            setPlateau(listPlateau.data);
+            const listCapacitaire = await client.get(`${serverUrl}/previsions/Capacitaire/ListCapacitaire`);
+            setCapacitaire(listCapacitaire.data);
 
         }
 
@@ -137,41 +129,37 @@ export default function Plateau() {
 
     };
 
+    const deleteCapacitaire = (row) => {
 
-    const deletePlateau = (row) => {
+        if (window.confirm("Voulez vous vraiment supprimer ?")) {
+            axios.delete(`${serverUrl}/previsions/Capacitaire/delete-capacitaire/${row._id}`)
+                .then(alert(`${row.libelle} supprimé !!!`));
 
-        const result1 = temperature.some(t => t.plateau === row._id)
-        const result2 = climatiseur.some(c => c.plateau === row._id)
-        if (!result1 && !result2) {
-            if (window.confirm("Voulez vous vraiment supprimer ?")) {
-                axios.delete(`${serverUrl}/plateau/delete-Plateau/${row._id}`)
-                    .then(alert(`${row.libelle} supprimé !!!`));
+            async function fetchMyAPI() {
 
-                async function fetchMyAPI() {
+                const listOperation = await client.get(`${serverUrl}/operation/ListOperation`);
+                setOperation(listOperation.data);
 
-                    const listOperation = await client.get(`${serverUrl}/operation/ListOperation`);
-                    setOperation(listOperation.data);
-
-                    const listPlateau = await client.get(`${serverUrl}/plateau/ListPlateau`);
-                    setPlateau(listPlateau.data);
-                }
-
-                fetchMyAPI()
+                const listCapacitaire = await client.get(`${serverUrl}/previsions/Capacitaire/ListCapacitaire`);
+                setCapacitaire(listCapacitaire.data);
 
             }
-        }
 
+            fetchMyAPI()
+
+        }
     }
 
     const formik = useFormik({
         initialValues: {
-            libelle: modalData && modalData.libelle,
             operation: modalData && modalData.operation,
+            capacitaire: modalData && modalData.capacitaire,
+            previsions: modalData && modalData.previsions,
 
         },
 
         onSubmit: values => {
-            axios.put(`${serverUrl}/plateau/update-Plateau/${modalData._id}`, values)
+            axios.put(`${serverUrl}/previsions/Capacitaire/update-Capacitaire/${modalData._id}`, values)
                 .then(res => {
                     alert('Modification réussie !');
                 });
@@ -181,8 +169,8 @@ export default function Plateau() {
                 const listOperation = await client.get(`${serverUrl}/operation/ListOperation`);
                 setOperation(listOperation.data);
 
-                const listPlateau = await client.get(`${serverUrl}/plateau/ListPlateau`);
-                setPlateau(listPlateau.data);
+                const listCapacitaire = await client.get(`${serverUrl}/previsions/Capacitaire/ListCapacitaire`);
+                setCapacitaire(listCapacitaire.data);
 
             }
 
@@ -191,6 +179,7 @@ export default function Plateau() {
             setOpenM(false);
         },
     })
+
     return (
         <div>
             <div align="right"><Button sx={{ color: blue[900] }} onClick={handleOpen}>Ajouter</Button></div>
@@ -202,9 +191,9 @@ export default function Plateau() {
             >
                 <Box sx={{ ...style, width: 400 }}>
                     <div align="right"><Button onClick={handleClose}><CloseIcon sx={{ color: blue[500] }} /></Button></div>
-                    <h2 id="parent-modal-title" align="center">Ajouter Plateau</h2>
+                    <h2 id="parent-modal-title" align="center">Ajouter Prévisions Capacitaire</h2>
                     <p id="parent-modal-description">
-                        <AjoutPlateau />
+                        <AjoutCapacitaire />
                     </p>
 
                 </Box>
@@ -217,25 +206,14 @@ export default function Plateau() {
             >
                 <Box sx={{ ...style, width: 400 }}>
                     <div align="right"><Button onClick={handleCloseM}><CloseIcon sx={{ color: blue[500] }} /></Button></div>
-                    <h2 id="parent-modal-title" align="center">Modifier Plateau</h2>
+                    <h2 id="parent-modal-title" align="center">Modifier Prévisions Capacitaire</h2>
                     <p id="parent-modal-description">
                         <FormikProvider value={formik}>
                             <row>
+
                                 <form onSubmit={formik.handleSubmit}>
-                                    <TextField
-                                        id="libelle"
-                                        label="Libelle"
-                                        variant="outlined"
-                                        value={formik.values.libelle}
-                                        defaultValue={modalData && modalData.libelle}
-                                        size="small"
-                                        onChange={formik.handleChange}
-                                        required
-                                    />
-                                    <br />
-                                    <br />
                                     <FormControl sx={{ m: 0, minWidth: 225 }}>
-                                        <InputLabel id="operation">Operation*</InputLabel>
+                                        <InputLabel id="operation">Opération*</InputLabel>
                                         <Select
                                             labelId="operation"
                                             id="operation"
@@ -243,7 +221,7 @@ export default function Plateau() {
                                             variant="outlined"
                                             value={formik.values.operation}
                                             defaultValue={modalData && modalData.operation}
-                                            label="operation"
+                                            label="Opération"
                                             onChange={formik.handleChange}
                                             name="operation"
                                             required
@@ -253,9 +231,33 @@ export default function Plateau() {
                                     </FormControl>
                                     <br />
                                     <br />
+                                    <TextField
+                                        id="capacitaire"
+                                        label="Capacitaire"
+                                        variant="outlined"
+                                        value={formik.values.capacitaire}
+                                        defaultValue={modalData && modalData.capacitaire}
+                                        size="small"
+                                        onChange={formik.handleChange}
+                                        required
+                                    />
+                                    <br />
+                                    <br />
+                                    <TextField
+                                        id="previsions"
+                                        label="Prévisions"
+                                        variant="outlined"
+                                        value={formik.values.previsions}
+                                        defaultValue={modalData && modalData.previsions}
+                                        size="small"
+                                        onChange={formik.handleChange}
+                                        required
+                                    />
+                                    <br />
+                                    <br />
                                     <center>
                                         <Button type="submit" variant="contained" size="medium">
-                                            Modifier
+                                            Ajouter
                                         </Button>
                                     </center>
                                 </form>
@@ -268,23 +270,24 @@ export default function Plateau() {
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell>Libellé Plateau</StyledTableCell>
-                            <StyledTableCell >Opération</StyledTableCell>
+                            <StyledTableCell>Opération</StyledTableCell>
+                            <StyledTableCell >Capacitaire</StyledTableCell>
+                            <StyledTableCell >Prévisions</StyledTableCell>
                             <StyledTableCell align="right">Actions</StyledTableCell>
+
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {plateau.map((row) => (
+                        {capacitaire.map((row) => (
                             <StyledTableRow key={row._id}>
-                                <StyledTableCell component="th" scope="row">
-                                    {row.libelle}
-                                </StyledTableCell>
-                                <StyledTableCell >{getOPById(row.operation)}</StyledTableCell>
+                                <StyledTableCell component="th" scope="row">{getOPById(row.operation)}</StyledTableCell>
+                                <StyledTableCell >{row.capacitaire}</StyledTableCell>
+                                <StyledTableCell >{row.previsions}</StyledTableCell>
                                 <StyledTableCell align="right">
-                                    <IconButton aria-label="Edit" onClick={() => { handleOpenM(row) }}>
-                                        <EditIcon sx={{ color: blue[500] }} />
+                                    <IconButton aria-label="Edit" >
+                                        <EditIcon sx={{ color: blue[500] }} onClick={() => { handleOpenM(row) }} />
                                     </IconButton>
-                                    <IconButton aria-label="delete" onClick={() => deletePlateau(row)}>
+                                    <IconButton aria-label="delete" onClick={() => deleteCapacitaire(row)}>
                                         <DeleteIcon sx={{ color: red[400] }} />
                                     </IconButton>
                                 </StyledTableCell>

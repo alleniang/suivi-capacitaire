@@ -35,7 +35,7 @@ router.route('/ListReleve').get((req, res) => {
 
 // Get Single RELEVE
 router.route('/ListBU/:id').get((req, res) => {
-    businessUnitSchema.findById(req.params.id, (error, data) => {
+    releveTempSchema.findById(req.params.id, (error, data) => {
         if (error) {
             return next(error)
         } else {
@@ -46,8 +46,8 @@ router.route('/ListBU/:id').get((req, res) => {
 
 
 // Update RELEVE
-router.route('/update-Plateau/:id').put((req, res, next) => {
-    businessUnitSchema.findByIdAndUpdate(req.params.id, {
+router.route('/update-releve/:id').put((req, res, next) => {
+    releveTempSchema.findByIdAndUpdate(req.params.id, {
         $set: req.body
     }, (error, data) => {
         if (error) {
@@ -61,8 +61,8 @@ router.route('/update-Plateau/:id').put((req, res, next) => {
 })
 
 // Delete RELEVE
-router.route('/delete-Plateau/:id').delete((req, res, next) => {
-    businessUnitSchema.findByIdAndRemove(req.params.id, (error, data) => {
+router.route('/delete-releve/:id').delete((req, res, next) => {
+    releveTempSchema.findByIdAndRemove(req.params.id, (error, data) => {
         if (error) {
             return next(error);
         } else {

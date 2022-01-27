@@ -9,6 +9,7 @@ import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import client from '../api/client';
 import { serverUrl } from '../api/params';
+import { useFormik, FormikProvider } from 'formik';
 import { useEffect, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -20,6 +21,12 @@ import IconButton from '@mui/material/IconButton';
 import { AjoutProgramme } from './AjoutProgramme';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -60,6 +67,7 @@ export default function Programme() {
     const [programme, setProgramme] = useState([])
     const [bu, setBu] = useState([])
     const [operation, setOperation] = useState([])
+    const [modalData, setModalData] = useState()
 
 
     useEffect(() => {
@@ -104,6 +112,28 @@ export default function Programme() {
 
     };
 
+    const [openM, setOpenM] = React.useState(false);
+    const handleOpenM = (row) => {
+        setModalData(row)
+        setOpenM(true);
+    };
+
+    const handleCloseM = () => {
+        setOpenM(false);
+        async function fetchMyAPI() {
+
+            const listBu = await client.get(`${serverUrl}/businessUnit/ListBU`);
+            setBu(listBu.data);
+
+            const listProgram = await client.get(`${serverUrl}/programme/ListProgramme`);
+            setProgramme(listProgram.data);
+
+        }
+
+        fetchMyAPI()
+
+    };
+
     const deleteProgramme = (row) => {
 
         const result = operation.some(op => op.programme === row._id)
@@ -128,6 +158,34 @@ export default function Programme() {
 
     }
 
+    const formik = useFormik({
+        initialValues: {
+            libelle: modalData && modalData.libelle,
+            bU: modalData && modalData.bU,
+        },
+
+        onSubmit: values => {
+            axios.put(`${serverUrl}/programme/update-programme/${modalData._id}`, values)
+                .then(res => {
+                    alert('Modification réussie !');
+                });
+
+            async function fetchMyAPI() {
+
+                const listBu = await client.get(`${serverUrl}/businessUnit/ListBU`);
+                setBu(listBu.data);
+
+                const listProgram = await client.get(`${serverUrl}/programme/ListProgramme`);
+                setProgramme(listProgram.data);
+
+            }
+
+            fetchMyAPI()
+
+            setOpenM(false);
+        },
+    })
+
     return (
         <div>
             <div align="right"><Button sx={{ color: blue[900] }} onClick={handleOpen}>Ajouter</Button></div>
@@ -144,6 +202,61 @@ export default function Programme() {
                         <AjoutProgramme />
                     </p>
 
+                </Box>
+            </Modal>
+            <Modal
+                open={openM}
+                onClose={handleCloseM}
+                aria-labelledby="parent-modal-title"
+                aria-describedby="parent-modal-description"
+            >
+                <Box sx={{ ...style, width: 400 }}>
+                    <div align="right"><Button onClick={handleCloseM}><CloseIcon sx={{ color: blue[500] }} /></Button></div>
+                    <h2 id="parent-modal-title" align="center">Modifier Programme</h2>
+                    <p id="parent-modal-description">
+                        <FormikProvider value={formik}>
+                            <row>
+                                <form onSubmit={formik.handleSubmit}>
+                                    <TextField
+                                        id="libelle"
+                                        label="Libelle"
+                                        variant="outlined"
+                                        value={formik.values.libelle}
+                                        defaultValue={modalData && modalData.libelle}
+                                        size="small"
+                                        onChange={formik.handleChange}
+                                        required
+                                    />
+                                    <br />
+                                    <br />
+                                    <FormControl sx={{ m: 0, minWidth: 225 }}>
+                                        <InputLabel id="bU">Business Unit*</InputLabel>
+                                        <Select
+                                            labelId="bU"
+                                            id="bU"
+                                            size="small"
+                                            variant="outlined"
+                                            value={formik.values.bU}
+                                            defaultValue={modalData && modalData.bU}
+                                            label="Business Unit"
+                                            onChange={formik.handleChange}
+                                            name="bU"
+                                            required
+                                        >
+                                            {bu.map(bu => <MenuItem key={bu._id} value={bu._id}>{bu.libelle}</MenuItem>)}
+                                        </Select>
+                                    </FormControl>
+                                    <br />
+                                    <br />
+                                    <center>
+                                        <Button type="submit" variant="contained" size="medium">
+                                            Modifier
+                                        </Button>
+                                    </center>
+                                </form>
+                            </row>
+                        </FormikProvider >
+                    </p>
                 </Box>
             </Modal>
             <TableContainer component={Paper}>
@@ -165,7 +278,7 @@ export default function Programme() {
                                 <StyledTableCell >{getBUById(row.bU)}</StyledTableCell>
                                 <StyledTableCell align="right">
                                     <IconButton aria-label="Edit" >
-                                        <EditIcon sx={{ color: blue[500] }} />
+                                        <EditIcon sx={{ color: blue[500] }} onClick={() => { handleOpenM(row) }} />
                                     </IconButton>
                                     <IconButton aria-label="delete" onClick={() => deleteProgramme(row)}>
                                         <DeleteIcon sx={{ color: red[400] }} />

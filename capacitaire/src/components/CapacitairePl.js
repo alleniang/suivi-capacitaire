@@ -7,25 +7,25 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
-import axios from 'axios';
 import client from '../api/client';
 import { serverUrl } from '../api/params';
-import { useFormik, FormikProvider } from 'formik';
 import { useEffect, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { red, blue } from '@mui/material/colors';
-import Button from '@mui/material/Button';
-import { AjoutReleve } from './AjoutReleve';
-import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import { AjoutCapacitairePlateau } from './AjoutCapacitairePlateau';
+import CloseIcon from '@mui/icons-material/Close';
+import axios from 'axios';
+import { useFormik, FormikProvider } from 'formik';
+import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -52,7 +52,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const style = {
     position: 'absolute',
-    top: '40%',
+    top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 400,
@@ -64,10 +64,12 @@ const style = {
     pb: 3,
 };
 
-export default function Temperature() {
-    const [temperature, setTemperature] = useState([])
+export default function CapacitairePlateau() {
+    const [capacitairePlateau, setCapacitairePlateau] = useState([])
     const [plateau, setPlateau] = useState([])
     const [modalData, setModalData] = useState()
+
+
 
     useEffect(() => {
         async function fetchMyAPI() {
@@ -75,16 +77,18 @@ export default function Temperature() {
             const listPlateau = await client.get(`${serverUrl}/plateau/ListPlateau`);
             setPlateau(listPlateau.data);
 
-            const listTemperature = await client.get(`${serverUrl}/releveTemp/ListReleve`);
-            setTemperature(listTemperature.data);
+            const listCapacitairePlateau = await client.get(`${serverUrl}/capacitairePlateau/ListCapacitairePlateau`);
+            setCapacitairePlateau(listCapacitairePlateau.data);
+
+
         }
 
         fetchMyAPI()
 
     }, []);
 
-    const getPlById = id => {
-        const result = plateau.filter(pl => pl._id === id);
+    const getPLById = id => {
+        const result = plateau.filter(p => p._id === id);
         return result[0].libelle
     }
 
@@ -100,8 +104,8 @@ export default function Temperature() {
             const listPlateau = await client.get(`${serverUrl}/plateau/ListPlateau`);
             setPlateau(listPlateau.data);
 
-            const listTemperature = await client.get(`${serverUrl}/releveTemp/ListReleve`);
-            setTemperature(listTemperature.data);
+            const listCapacitairePlateau = await client.get(`${serverUrl}/capacitairePlateau/ListCapacitairePlateau`);
+            setCapacitairePlateau(listCapacitairePlateau.data);
         }
 
         fetchMyAPI()
@@ -121,8 +125,8 @@ export default function Temperature() {
             const listPlateau = await client.get(`${serverUrl}/plateau/ListPlateau`);
             setPlateau(listPlateau.data);
 
-            const listTemperature = await client.get(`${serverUrl}/releveTemp/ListReleve`);
-            setTemperature(listTemperature.data);
+            const listCapacitairePlateau = await client.get(`${serverUrl}/capacitairePlateau/ListCapacitairePlateau`);
+            setCapacitairePlateau(listCapacitairePlateau.data);
 
         }
 
@@ -130,16 +134,24 @@ export default function Temperature() {
 
     };
 
-    const deleteTemp = (row) => {
 
-        const result = plateau.some(p => p.bU === row._id)
-        if (!result) {
-            if (window.confirm("Voulez vous vraiment supprimer ?")) {
-                axios.delete(`${serverUrl}/releveTemp/delete-releve/${row._id}`)
-                    .then(alert(`${row.libelle} supprimé !!!`));
-                axios.get(`${serverUrl}/releveTemp/ListReleve`)
-                    .then(res => setTemperature(res.data));
+    const deletePlateau = (row) => {
+
+        if (window.confirm("Voulez vous vraiment supprimer ?")) {
+            axios.delete(`${serverUrl}/capacitairePlateau/delete-CapacitairePlateau/${row._id}`)
+                .then(alert(`${row.libelle} supprimé !!!`));
+
+            async function fetchMyAPI() {
+
+                const listPlateau = await client.get(`${serverUrl}/plateau/ListPlateau`);
+                setPlateau(listPlateau.data);
+
+                const listCapacitairePlateau = await client.get(`${serverUrl}/capacitairePlateau/ListCapacitairePlateau`);
+                setCapacitairePlateau(listCapacitairePlateau.data);
             }
+
+            fetchMyAPI()
+
         }
 
     }
@@ -148,14 +160,19 @@ export default function Temperature() {
         initialValues: {
             date: modalData && modalData.date,
             plateau: modalData && modalData.plateau,
-            temperature: modalData && modalData.temperature,
+            operation: modalData && modalData.operation,
+            site: modalData && modalData.site,
+            capacite: modalData && modalData.capacite,
+            boxes: modalData && modalData.boxes,
+            positions: modalData && modalData.positions,
+            positionsOK: modalData && modalData.positionsOK,
         },
 
         onSubmit: values => {
             var mois = value.getMonth()
             mois += 1
             values.date = value.getDate() + "-" + mois + "-" + value.getFullYear();
-            axios.put(`${serverUrl}/releveTemp/update-releve/${modalData._id}`, values)
+            axios.put(`${serverUrl}/capacitairePlateau/update-capacitairePlateau/${modalData._id}`, values)
                 .then(res => {
                     alert('Modification réussie !');
                 });
@@ -165,8 +182,8 @@ export default function Temperature() {
                 const listPlateau = await client.get(`${serverUrl}/plateau/ListPlateau`);
                 setPlateau(listPlateau.data);
 
-                const listTemperature = await client.get(`${serverUrl}/releveTemp/ListReleve`);
-                setTemperature(listTemperature.data);
+                const listCapacitairePlateau = await client.get(`${serverUrl}/capacitairePlateau/ListCapacitairePlateau`);
+                setCapacitairePlateau(listCapacitairePlateau.data);
 
             }
 
@@ -175,7 +192,6 @@ export default function Temperature() {
             setOpenM(false);
         },
     })
-
     const [value, setValue] = useState(new Date());
 
     const handleChange = (newValue) => {
@@ -191,11 +207,11 @@ export default function Temperature() {
                 aria-labelledby="parent-modal-title"
                 aria-describedby="parent-modal-description"
             >
-                <Box sx={{ ...style, width: 400 }}>
+                <Box sx={{ ...style, width: 530 }}>
                     <div align="right"><Button onClick={handleClose}><CloseIcon sx={{ color: blue[500] }} /></Button></div>
-                    <h2 id="parent-modal-title" align="center">Ajouter Relevé</h2>
+                    <h2 id="parent-modal-title" align="center">Ajouter Capacitaire Plateau</h2>
                     <p id="parent-modal-description">
-                        <AjoutReleve />
+                        <AjoutCapacitairePlateau />
                     </p>
 
                 </Box>
@@ -206,29 +222,17 @@ export default function Temperature() {
                 aria-labelledby="parent-modal-title"
                 aria-describedby="parent-modal-description"
             >
-                <Box sx={{ ...style, width: 400 }}>
+                <Box sx={{ ...style, width: 530 }}>
                     <div align="right"><Button onClick={handleCloseM}><CloseIcon sx={{ color: blue[500] }} /></Button></div>
-                    <h2 id="parent-modal-title" align="center">Modifier Opération</h2>
+                    <h2 id="parent-modal-title" align="center">Modifier Capacitaire Plateau</h2>
                     <p id="parent-modal-description">
                         <FormikProvider value={formik}>
                             <row>
                                 <form onSubmit={formik.handleSubmit}>
-                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                        <DesktopDatePicker
-                                            id="date"
-                                            label="Date relevé"
-                                            inputFormat="dd/MM/yyyy"
-                                            value={value}
-                                            name="date"
-                                            onChange={handleChange}
-                                            renderInput={(params) => <TextField {...params} />}
-                                            required
-                                        />
-                                    </LocalizationProvider>
-                                    <br />
-                                    <br />
-                                    <FormControl sx={{ m: 0, minWidth: 262 }}>
-                                        <InputLabel id="programme">Plateau*</InputLabel>
+                                    {modalData && modalData.date}
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <FormControl sx={{ minWidth: 222 }}>
+                                        <InputLabel id="plateau">Plateau*</InputLabel>
                                         <Select
                                             labelId="plateau"
                                             id="plateau"
@@ -246,17 +250,73 @@ export default function Temperature() {
                                     </FormControl>
                                     <br />
                                     <br />
-                                    <TextField sx={{ m: 0, minWidth: 262 }}
-                                        id="temperature"
-                                        label="Temperature"
+                                    <FormControl sx={{ m: 0, minWidth: 222 }}>
+                                        <InputLabel id="site">Site*</InputLabel>
+                                        <Select
+                                            labelId="site"
+                                            id="site"
+                                            size="small"
+                                            variant="outlined"
+                                            value={formik.values.site}
+                                            defaultValue={modalData && modalData.site}
+                                            label="site"
+                                            onChange={formik.handleChange}
+                                            name="site"
+                                            required
+                                        >
+                                            <MenuItem value="4C">4C</MenuItem>
+                                            <MenuItem value="PA">PA</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                    &nbsp;&nbsp;
+
+                                    <TextField
+                                        id="capacite"
+                                        label="Capacité"
                                         variant="outlined"
-                                        value={formik.values.temperature}
-                                        defaultValue={modalData && modalData.temperature}
+                                        value={formik.values.capacite}
+                                        defaultValue={modalData && modalData.capacite}
                                         size="small"
                                         onChange={formik.handleChange}
                                         required
                                     />
                                     <br />
+                                    <br />
+                                    <TextField
+                                        id="boxes"
+                                        label="Boxes"
+                                        variant="outlined"
+                                        value={formik.values.boxes}
+                                        defaultValue={modalData && modalData.boxes}
+                                        size="small"
+                                        onChange={formik.handleChange}
+                                        required
+                                    />
+                                    &nbsp;&nbsp;
+                                    <TextField
+                                        id="positions"
+                                        label="Positions"
+                                        variant="outlined"
+                                        value={formik.values.positions}
+                                        defaultValue={modalData && modalData.positions}
+                                        size="small"
+                                        onChange={formik.handleChange}
+                                        required
+                                    />
+                                    <br />
+                                    <br />
+                                    <center>
+                                        <TextField
+                                            id="positionsOK"
+                                            label="Positions OK"
+                                            variant="outlined"
+                                            value={formik.values.positionsOK}
+                                            defaultValue={modalData && modalData.positionsOK}
+                                            size="small"
+                                            onChange={formik.handleChange}
+                                            required
+                                        />
+                                    </center>
                                     <br />
                                     <center>
                                         <Button type="submit" variant="contained" size="medium">
@@ -273,26 +333,33 @@ export default function Temperature() {
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell>Date</StyledTableCell>
+                            <StyledTableCell >Date</StyledTableCell>
                             <StyledTableCell >Plateau</StyledTableCell>
-                            <StyledTableCell >Température</StyledTableCell>
+                            <StyledTableCell >Site</StyledTableCell>
+                            <StyledTableCell >Capacité</StyledTableCell>
+                            <StyledTableCell >Boxes</StyledTableCell>
+                            <StyledTableCell >Positions</StyledTableCell>
+                            <StyledTableCell >Positions OK</StyledTableCell>
                             <StyledTableCell align="right">Actions</StyledTableCell>
-
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {temperature.map((row) => (
+                        {capacitairePlateau.map((row) => (
                             <StyledTableRow key={row._id}>
                                 <StyledTableCell component="th" scope="row">
                                     {row.date}
                                 </StyledTableCell>
-                                <StyledTableCell >{getPlById(row.plateau)}</StyledTableCell>
-                                <StyledTableCell >{row.temperature} °C</StyledTableCell>
+                                <StyledTableCell >{getPLById(row.plateau)}</StyledTableCell>
+                                <StyledTableCell >{row.site}</StyledTableCell>
+                                <StyledTableCell >{row.capacite}</StyledTableCell>
+                                <StyledTableCell >{row.boxes}</StyledTableCell>
+                                <StyledTableCell >{row.positions}</StyledTableCell>
+                                <StyledTableCell >{row.positionsOK}</StyledTableCell>
                                 <StyledTableCell align="right">
-                                    <IconButton aria-label="Edit" >
-                                        <EditIcon sx={{ color: blue[500] }} onClick={() => { handleOpenM(row) }}/>
+                                    <IconButton aria-label="Edit" onClick={() => { handleOpenM(row) }}>
+                                        <EditIcon sx={{ color: blue[500] }} />
                                     </IconButton>
-                                    <IconButton aria-label="delete" onClick={() => deleteTemp(row)}>
+                                    <IconButton aria-label="delete" onClick={() => deletePlateau(row)}>
                                         <DeleteIcon sx={{ color: red[400] }} />
                                     </IconButton>
                                 </StyledTableCell>

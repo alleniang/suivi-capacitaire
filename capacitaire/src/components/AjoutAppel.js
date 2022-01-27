@@ -9,18 +9,18 @@ import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 
-
-export const AjoutPlateau = () => {
+export const AjoutAppel = () => {
 
     const [operation, setOperation] = useState([])
     const formik = useFormik({
         initialValues: {
-            libelle: '',
             operation: '',
+            appels: '',
+            previsions: '',
 
         },
         onSubmit: values => {
-            axios.post(`${serverUrl}/plateau/AjoutPlateau`, values)
+            axios.post(`${serverUrl}/previsions/Appels/Ajout`, values)
                 .then(res => console.log(res.data));
 
             console.log(values)
@@ -32,30 +32,19 @@ export const AjoutPlateau = () => {
             .then(res => setOperation(res.data));
     }, []);
 
-    
     return (
         <FormikProvider value={formik}>
             <row>
 
                 <form onSubmit={formik.handleSubmit}>
-                    <TextField
-                        id="libelle"
-                        label="Libelle"
-                        variant="outlined"
-                        size="small"
-                        onChange={formik.handleChange}
-                        required
-                    />
-                    <br />
-                    <br />
                     <FormControl sx={{ m: 0, minWidth: 225 }}>
-                        <InputLabel id="operation">Operation*</InputLabel>
+                        <InputLabel id="operation">Opération*</InputLabel>
                         <Select
                             labelId="operation"
                             id="operation"
                             size="small"
                             variant="outlined"
-                            label="operation"
+                            label="Opération"
                             onChange={formik.handleChange}
                             name="operation"
                             required
@@ -63,6 +52,26 @@ export const AjoutPlateau = () => {
                             {operation.map(op => <MenuItem key={op._id} value={op._id}>{op.libelle}</MenuItem>)}
                         </Select>
                     </FormControl>
+                    <br />
+                    <br />
+                    <TextField
+                        id="appels"
+                        label="Appels"
+                        variant="outlined"
+                        size="small"
+                        onChange={formik.handleChange}
+                        required
+                    />
+                    <br />
+                    <br />
+                    <TextField
+                        id="previsions"
+                        label="Prévisions"
+                        variant="outlined"
+                        size="small"
+                        onChange={formik.handleChange}
+                        required
+                    />
                     <br />
                     <br />
                     <center>

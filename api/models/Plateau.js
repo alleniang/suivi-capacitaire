@@ -9,21 +9,6 @@ let plateauSchema = new Schema({
     operation:{
         type: ObjectId
     },
-    site:{
-        type: String
-    },
-    capacite:{
-        type: Number
-    },
-    boxes:{
-        type: Number
-    },
-    positions:{
-        type: Number
-    },
-    positionsOK:{
-        type: Number
-    },
 }, {
     collection: 'plateau'
 })

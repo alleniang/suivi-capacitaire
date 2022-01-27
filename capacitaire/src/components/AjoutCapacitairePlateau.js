@@ -11,23 +11,26 @@ import FormControl from '@mui/material/FormControl';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-//import { format } from 'date-fns';
 
-export const AjoutReleve = () => {
+export const AjoutCapacitairePlateau = () => {
 
     const [plateau, setPlateau] = useState([])
     const formik = useFormik({
         initialValues: {
             date: '',
             plateau: '',
-            temperature: '',
+            site: '',
+            capacite: '',
+            boxes: '',
+            positions: '',
+            positionsOK: '',
 
         },
         onSubmit: values => {
-            var mois=value.getMonth()
+            var mois = value.getMonth()
             mois += 1
-            values.date = value.getDate()+"-"+mois+"-"+value.getFullYear();
-            axios.post(`${serverUrl}/releveTemp/AjoutReleve`, values)
+            values.date = value.getDate() + "-" + mois + "-" + value.getFullYear();
+            axios.post(`${serverUrl}/capacitairePlateau/AjoutCapacitairePlateau`, values)
                 .then(res => console.log(res.data));
             console.log(values)
             alert(JSON.stringify(values, null, 2));
@@ -42,27 +45,28 @@ export const AjoutReleve = () => {
 
     const handleChange = (newValue) => {
         setValue(newValue);
-    };
+    }
+
     return (
         <FormikProvider value={formik}>
             <row>
 
                 <form onSubmit={formik.handleSubmit}>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DesktopDatePicker
+                        <DesktopDatePicker 
                             id="date"
                             label="Date relevé"
                             inputFormat="dd/MM/yyyy"
+                            size="small"
                             value={value}
                             name="date"
                             onChange={handleChange}
-                            renderInput={(params) => <TextField {...params}/>}
+                            renderInput={(params) => <TextField {...params} />}
                             required
                         />
                     </LocalizationProvider>
-                    <br />
-                    <br />
-                    <FormControl sx={{ m: 0, minWidth: 262 }}>
+                    &nbsp;&nbsp;
+                    <FormControl sx={{ minWidth: 190 }}>
                         <InputLabel id="plateau">Plateau*</InputLabel>
                         <Select
                             labelId="plateau"
@@ -79,9 +83,27 @@ export const AjoutReleve = () => {
                     </FormControl>
                     <br />
                     <br />
-                    <TextField sx={{ m: 0, minWidth: 262 }}
-                        id="temperature"
-                        label="Température"
+                    <FormControl sx={{ m: 0, minWidth: 222 }}>
+                        <InputLabel id="site">Site*</InputLabel>
+                        <Select
+                            labelId="site"
+                            id="site"
+                            size="small"
+                            variant="outlined"
+                            label="site"
+                            onChange={formik.handleChange}
+                            name="site"
+                            required
+                        >
+                            <MenuItem value="4C">4C</MenuItem>
+                            <MenuItem value="PA">PA</MenuItem>
+                        </Select>
+                    </FormControl>
+                    &nbsp;&nbsp;
+
+                    <TextField
+                        id="capacite"
+                        label="Capacité"
                         variant="outlined"
                         size="small"
                         onChange={formik.handleChange}
@@ -89,6 +111,37 @@ export const AjoutReleve = () => {
                     />
                     <br />
                     <br />
+                    <TextField
+                        id="boxes"
+                        label="Boxes"
+                        variant="outlined"
+                        size="small"
+                        onChange={formik.handleChange}
+                        required
+                    />
+                    &nbsp;&nbsp;
+                    <TextField
+                        id="positions"
+                        label="Positions"
+                        variant="outlined"
+                        size="small"
+                        onChange={formik.handleChange}
+                        required
+                    />
+                    <br />
+                    <br />
+                    <center>
+                        <TextField
+                            id="positionsOK"
+                            label="Positions OK"
+                            variant="outlined"
+                            size="small"
+                            onChange={formik.handleChange}
+                            required
+                        />
+                    </center>
+                    <br />
+
                     <center>
                         <Button type="submit" variant="contained" size="medium">
                             Ajouter

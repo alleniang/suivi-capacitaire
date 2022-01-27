@@ -4,14 +4,10 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import Plateau  from './Plateau';
-import CapacitairePlateau  from './CapacitairePlateau';
-import BusinessUnit from './BusinessUnit';
-import Programme from './Programme';
-import Operation from './Operation';
+import Capacitaire from './Capacitaire';
+import Appels from './Appels';
 
-
-export const Composants = () => {
+export const Previsions = () => {
     const [value, setValue] = React.useState('1');
 
     const handleChange = (event, newValue) => {
@@ -24,17 +20,11 @@ export const Composants = () => {
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example">
                         <Tab label="Capacitaire" value="1" />
-                        <Tab label="Plateau" value="2" />
-                        <Tab label="Opération" value="3" />
-                        <Tab label="Programme" value="4" />
-                        <Tab label="Business Unit" value="5" />
+                        <Tab label="Appels" value="2" />
                     </TabList>
                 </Box>
-                <TabPanel value="1"><CapacitairePlateau/></TabPanel>
-                <TabPanel value="2"><Plateau/></TabPanel>
-                <TabPanel value="3"><Operation/></TabPanel>
-                <TabPanel value="4"><Programme/></TabPanel>
-                <TabPanel value="5"><BusinessUnit/></TabPanel>
+                <TabPanel value="1"><Capacitaire/></TabPanel>
+                <TabPanel value="2"><Appels/></TabPanel>
             </TabContext>
         </Box>
     );

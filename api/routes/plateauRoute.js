@@ -29,7 +29,7 @@ router.route('/ListPlateau').get((req, res) => {
 
 // Get Single Plateau
 router.route('/edit-Plateau/:id').get((req, res) => {
-    studentSchema.findById(req.params.id, (error, data) => {
+    plateauSchema.findById(req.params.id, (error, data) => {
         if (error) {
             return next(error)
         } else {
@@ -41,7 +41,7 @@ router.route('/edit-Plateau/:id').get((req, res) => {
 
 // Update Plateau
 router.route('/update-Plateau/:id').put((req, res, next) => {
-    studentSchema.findByIdAndUpdate(req.params.id, {
+    plateauSchema.findByIdAndUpdate(req.params.id, {
         $set: req.body
     }, (error, data) => {
         if (error) {

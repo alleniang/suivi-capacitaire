@@ -46,7 +46,7 @@ router.route('/ListBU/:id').get((req, res) => {
 
 
 // Update BU
-router.route('/update-Plateau/:id').put((req, res, next) => {
+router.route('/update-bu/:id').put((req, res, next) => {
     businessUnitSchema.findByIdAndUpdate(req.params.id, {
         $set: req.body
     }, (error, data) => {

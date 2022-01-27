@@ -42,7 +42,7 @@ router.route('/edit-Plateau/:id').get((req, res) => {
 
 
 // Update OP
-router.route('/update-Plateau/:id').put((req, res, next) => {
+router.route('/update-Operation/:id').put((req, res, next) => {
     operationSchema.findByIdAndUpdate(req.params.id, {
         $set: req.body
     }, (error, data) => {
@@ -51,7 +51,7 @@ router.route('/update-Plateau/:id').put((req, res, next) => {
             console.log(error)
         } else {
             res.json(data)
-            console.log('Plateau updated successfully !')
+            console.log('Operation updated successfully !')
         }
     })
 })

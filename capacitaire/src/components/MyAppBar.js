@@ -17,10 +17,12 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import TocIcon from '@mui/icons-material/Toc';
+import StackedBarChartIcon from '@mui/icons-material/StackedBarChart';
 import { Switch, Route } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import { Composants } from "./Composants";
 import { Climatisation } from "./Climatisation";
+import { Previsions } from "./Previsions";
 
 const drawerWidth = 240;
 
@@ -140,6 +142,16 @@ export default function PersistentDrawerLeft() {
                             </Link>
                         </ListItemText>
                     </ListItem>
+                    <ListItem >
+                        <ListItemIcon>
+                            <StackedBarChartIcon />
+                        </ListItemIcon>
+                        <ListItemText>
+                            <Link to={"/Previsions"} className="nav-link" style={{ textDecoration: 'none' }}>
+                                Prévisions
+                            </Link>
+                        </ListItemText>
+                    </ListItem>
                 </List>
                 <Divider />
                 <List>
@@ -160,6 +172,7 @@ export default function PersistentDrawerLeft() {
                     <Switch>
                         <Route path="/Composants" component={Composants} />
                         <Route path="/Climatisation" component={Climatisation} />
+                        <Route path="/Previsions" component={Previsions} />
                     </Switch>
 
                 </Typography>

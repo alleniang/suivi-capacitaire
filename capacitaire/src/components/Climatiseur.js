@@ -7,6 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
+import axios from 'axios';
 import client from '../api/client';
 import { serverUrl } from '../api/params';
 import { useEffect, useState } from "react";
@@ -18,7 +19,13 @@ import { red, blue } from '@mui/material/colors';
 import Button from '@mui/material/Button';
 import { AjoutClim } from './AjoutClim';
 import CloseIcon from '@mui/icons-material/Close';
-
+import IconButton from '@mui/material/IconButton';
+import { useFormik, FormikProvider } from 'formik';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -57,6 +64,7 @@ const style = {
 export default function Climatiseur() {
     const [climatiseur, setClimatiseur] = useState([])
     const [plateau, setPlateau] = useState([])
+    const [modalData, setModalData] = useState()
 
 
     useEffect(() => {
@@ -97,6 +105,71 @@ export default function Climatiseur() {
         fetchMyAPI()
 
     };
+
+    const [openM, setOpenM] = React.useState(false);
+    const handleOpenM = (row) => {
+        setModalData(row)
+        setOpenM(true);
+    };
+
+    const handleCloseM = () => {
+        setOpenM(false);
+        async function fetchMyAPI() {
+
+            const listPlateau = await client.get(`${serverUrl}/plateau/ListPlateau`);
+            setPlateau(listPlateau.data);
+
+            const listClimatiseur = await client.get(`${serverUrl}/climatiseur/ListClimatiseur`);
+            setClimatiseur(listClimatiseur.data);
+        }
+
+        fetchMyAPI()
+
+    };
+
+    const deleteClim = (row) => {
+
+        if (window.confirm("Voulez vous vraiment supprimer ?")) {
+            axios.delete(`${serverUrl}/climatiseur/delete-Climatiseur/${row._id}`)
+                .then(alert(`${row.libelle} supprimé !!!`));
+            axios.get(`${serverUrl}/climatiseur/ListClimatiseur`)
+                .then(res => setClimatiseur(res.data));
+        }
+
+
+    }
+
+    const formik = useFormik({
+        initialValues: {
+            libelle: modalData && modalData.libelle,
+            plateau: modalData && modalData.plateau,
+            marque: modalData && modalData.marque,
+            chevaux: modalData && modalData.chevaux,
+            etat: modalData && modalData.etat,
+        },
+
+        onSubmit: values => {
+            axios.put(`${serverUrl}/climatiseur/update-Climatiseur/${modalData._id}`, values)
+                .then(res => {
+                    alert('Modification réussie !');
+                });
+
+            async function fetchMyAPI() {
+
+                const listPlateau = await client.get(`${serverUrl}/plateau/ListPlateau`);
+                setPlateau(listPlateau.data);
+
+                const listClimatiseur = await client.get(`${serverUrl}/climatiseur/ListClimatiseur`);
+                setClimatiseur(listClimatiseur.data);
+
+            }
+
+            fetchMyAPI()
+
+            setOpenM(false);
+        },
+    })
+
     return (
         <div>
             <div align="right"><Button sx={{ color: blue[900] }} onClick={handleOpen}>Ajouter</Button></div>
@@ -113,6 +186,105 @@ export default function Climatiseur() {
                         <AjoutClim />
                     </p>
 
+                </Box>
+            </Modal>
+            <Modal
+                open={openM}
+                onClose={handleCloseM}
+                aria-labelledby="parent-modal-title"
+                aria-describedby="parent-modal-description"
+            >
+                <Box sx={{ ...style, width: 530 }}>
+                    <div align="right"><Button onClick={handleCloseM}><CloseIcon sx={{ color: blue[500] }} /></Button></div>
+                    <h2 id="parent-modal-title" align="center">Modifier Climatiseur</h2>
+                    <p id="parent-modal-description">
+                        <FormikProvider value={formik}>
+                            <row>
+
+                                <form onSubmit={formik.handleSubmit} >
+                                    <TextField
+                                        id="libelle"
+                                        label="Libellé"
+                                        variant="outlined"
+                                        value={formik.values.libelle}
+                                        defaultValue={modalData && modalData.libelle}
+                                        size="small"
+                                        onChange={formik.handleChange}
+                                        required
+                                    />
+                                    &nbsp;&nbsp;
+                                    <FormControl sx={{ minWidth: 226 }}>
+                                        <InputLabel id="plateau">Plateau*</InputLabel>
+                                        <Select
+                                            labelId="plateau"
+                                            id="plateau"
+                                            size="small"
+                                            variant="outlined"
+                                            value={formik.values.plateau}
+                                            defaultValue={modalData && modalData.plateau}
+                                            label="plateau"
+                                            onChange={formik.handleChange}
+                                            name="plateau"
+                                            required
+                                        >
+                                            {plateau.map(p => <MenuItem key={p._id} value={p._id}>{p.libelle}</MenuItem>)}
+                                        </Select>
+                                    </FormControl>
+                                    <br />
+                                    <br />
+                                    <TextField
+                                        id="marque"
+                                        label="Marque"
+                                        variant="outlined"
+                                        value={formik.values.marque}
+                                        defaultValue={modalData && modalData.marque}
+                                        size="small"
+                                        onChange={formik.handleChange}
+                                        required
+                                    />
+                                    &nbsp;&nbsp;
+                                    <TextField
+                                        id="chevaux"
+                                        label="Chevaux"
+                                        variant="outlined"
+                                        value={formik.values.chevaux}
+                                        defaultValue={modalData && modalData.chevaux}
+                                        size="small"
+                                        onChange={formik.handleChange}
+                                        required
+                                    />
+                                    <br />
+                                    <br />
+                                    <center>
+                                        <FormControl sx={{ m: 0, minWidth: 226 }}>
+                                            <InputLabel id="site">Etat*</InputLabel>
+                                            <Select
+                                                labelId="etat"
+                                                id="etat"
+                                                size="small"
+                                                variant="outlined"
+                                                value={formik.values.etat}
+                                                defaultValue={modalData && modalData.etat}
+                                                label="etat"
+                                                onChange={formik.handleChange}
+                                                name="etat"
+                                                required
+                                            >
+                                                <MenuItem value="OK">OK</MenuItem>
+                                                <MenuItem value="KO">KO</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </center>
+                                    <br />
+                                    <center>
+                                        <Button type="submit" variant="contained" size="medium">
+                                            Ajouter
+                                        </Button>
+                                    </center>
+                                </form>
+                            </row>
+                        </FormikProvider >
+                    </p>
                 </Box>
             </Modal>
             <TableContainer component={Paper}>
@@ -138,8 +310,14 @@ export default function Climatiseur() {
                                 <StyledTableCell >{row.marque}</StyledTableCell>
                                 <StyledTableCell >{row.chevaux}</StyledTableCell>
                                 <StyledTableCell >{row.etat}</StyledTableCell>
-                                <StyledTableCell align="right"><EditIcon sx={{ color: blue[500] }} /><DeleteIcon sx={{ color: red[400] }} /></StyledTableCell>
-
+                                <StyledTableCell align="right">
+                                    <IconButton aria-label="Edit" >
+                                        <EditIcon sx={{ color: blue[500] }} onClick={() => { handleOpenM(row) }} />
+                                    </IconButton>
+                                    <IconButton aria-label="delete" onClick={() => deleteClim(row)}>
+                                        <DeleteIcon sx={{ color: red[400] }} />
+                                    </IconButton>
+                                </StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>

@@ -12,7 +12,7 @@ import FormControl from '@mui/material/FormControl';
 
 export const AjoutClim = () => {
 
-    const [businessUnit, setBusinessUnit] = useState([])
+    const [plateau, setPlateau] = useState([])
     const formik = useFormik({
         initialValues: {
             libelle: '',
@@ -32,7 +32,7 @@ export const AjoutClim = () => {
     })
     useEffect(() => {
         axios.get(`${serverUrl}/plateau/ListPlateau`)
-            .then(res => setBusinessUnit(res.data));
+            .then(res => setPlateau(res.data));
     }, []);
 
 
@@ -62,7 +62,7 @@ export const AjoutClim = () => {
                             name="plateau"
                             required
                         >
-                            {businessUnit.map(b => <MenuItem key={b._id} value={b._id}>{b.libelle}</MenuItem>)}
+                            {plateau.map(p => <MenuItem key={p._id} value={p._id}>{p.libelle}</MenuItem>)}
                         </Select>
                     </FormControl>
                     <br />
