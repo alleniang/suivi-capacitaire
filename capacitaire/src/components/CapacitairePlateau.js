@@ -39,7 +39,7 @@ const style = {
     pb: 3,
 };
 
-export default function TestTab() {
+export default function CapacitairePlateau() {
 
     // const [capacitairePlateau, setCapacitairePlateau] = useState([])
     // const [plateau, setPlateau] = useState([])

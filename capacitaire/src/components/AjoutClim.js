@@ -50,7 +50,7 @@ export const AjoutClim = () => {
                         required
                     />
                     &nbsp;&nbsp;
-                    <FormControl sx={{ minWidth: 227 }}>
+                    <FormControl sx={{ minWidth: 226 }}>
                         <InputLabel id="plateau">Plateau*</InputLabel>
                         <Select
                             labelId="plateau"
