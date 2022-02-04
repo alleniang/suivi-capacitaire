@@ -23,8 +23,8 @@ export const AjoutAppel = () => {
             axios.post(`${serverUrl}/previsions/Appels/Ajout`, values)
                 .then(res => console.log(res.data));
 
-            console.log(values)
-            alert(JSON.stringify(values, null, 2));
+            //console.log(values)
+            //alert(JSON.stringify(values, null, 2));
         },
     })
     useEffect(() => {

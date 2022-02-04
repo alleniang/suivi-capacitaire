@@ -32,8 +32,8 @@ export const AjoutCapacitairePlateau = () => {
             values.date = value.getDate() + "-" + mois + "-" + value.getFullYear();
             axios.post(`${serverUrl}/capacitairePlateau/AjoutCapacitairePlateau`, values)
                 .then(res => console.log(res.data));
-            console.log(values)
-            alert(JSON.stringify(values, null, 2));
+            //console.log(values)
+            //alert(JSON.stringify(values, null, 2));
         },
     })
     useEffect(() => {

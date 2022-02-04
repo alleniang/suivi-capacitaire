@@ -26,8 +26,8 @@ export const AjoutClim = () => {
             axios.post(`${serverUrl}/climatiseur/AjoutClimatiseur`, values)
                 .then(res => console.log(res.data));
 
-            console.log(values)
-            alert(JSON.stringify(values, null, 2));
+            //console.log(values)
+            //alert(JSON.stringify(values, null, 2));
         },
     })
     useEffect(() => {

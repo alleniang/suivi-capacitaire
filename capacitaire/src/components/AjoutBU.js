@@ -18,8 +18,8 @@ export const AjoutBU = () => {
                 let response = res.data;
                 alert(response.message);
             });
-            console.log(values)
-            alert(JSON.stringify(values, null, 2));
+            //console.log(values)
+            //alert(JSON.stringify(values, null, 2));
         },
     });
     return (
