@@ -19,10 +19,10 @@ export const AjoutPlateau = () => {
             operation: '',
 
         },
-        onSubmit: values => {
+        onSubmit: (values, { resetForm }) => {
             axios.post(`${serverUrl}/plateau/AjoutPlateau`, values)
-                .then(res => console.log(res.data));
-
+                .then(res => alert('Plateau ajouté !'));
+            resetForm({ values: '' });
             //console.log(values)
             //alert(JSON.stringify(values, null, 2));
         },
@@ -43,6 +43,7 @@ export const AjoutPlateau = () => {
                         label="Libelle"
                         variant="outlined"
                         size="small"
+                        value={formik.values.libelle}
                         onChange={formik.handleChange}
                         required
                     />
@@ -56,6 +57,7 @@ export const AjoutPlateau = () => {
                             size="small"
                             variant="outlined"
                             label="operation"
+                            value={formik.values.operation}
                             onChange={formik.handleChange}
                             name="operation"
                             required

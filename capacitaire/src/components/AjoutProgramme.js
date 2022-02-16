@@ -18,10 +18,10 @@ export const AjoutProgramme = () => {
             bU: '',
 
         },
-        onSubmit: values => {
+        onSubmit: (values, { resetForm }) => {
             axios.post(`${serverUrl}/programme/AjoutProgramme`, values)
-                .then(res => console.log(res.data));
-
+                .then(res => alert('Programme ajouté !'));
+            resetForm({ values: '' });
             //console.log(values)
             //alert(JSON.stringify(values, null, 2));
         },
@@ -41,6 +41,7 @@ export const AjoutProgramme = () => {
                         label="Libelle"
                         variant="outlined"
                         size="small"
+                        value={formik.values.libelle}
                         onChange={formik.handleChange}
                         required
                     />
@@ -54,6 +55,7 @@ export const AjoutProgramme = () => {
                             size="small"
                             variant="outlined"
                             label="Business Unit"
+                            value={formik.values.bU}
                             onChange={formik.handleChange}
                             name="bU"
                             required

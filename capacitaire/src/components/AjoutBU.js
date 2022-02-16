@@ -12,12 +12,13 @@ export const AjoutBU = () => {
             libelle: '',
 
         },
-        onSubmit: values => {
+        onSubmit: (values, { resetForm }) => {
             axios.post(`${serverUrl}/businessUnit/AjoutBU`, values)
             .then(res => {
                 let response = res.data;
                 alert(response.message);
             });
+            resetForm({ values: '' });
             //console.log(values)
             //alert(JSON.stringify(values, null, 2));
         },
@@ -29,6 +30,7 @@ export const AjoutBU = () => {
                 label="Libelle"
                 variant="outlined"
                 size="small"
+                value={formik.values.libelle}
                 onChange={formik.handleChange}
                 required
             />

@@ -23,12 +23,13 @@ export const AjoutReleve = () => {
             temperature: '',
 
         },
-        onSubmit: values => {
+        onSubmit: (values, { resetForm }) => {
             var mois=value.getMonth()
             mois += 1
             values.date = value.getDate()+"-"+mois+"-"+value.getFullYear();
             axios.post(`${serverUrl}/releveTemp/AjoutReleve`, values)
-                .then(res => console.log(res.data));
+                .then(res => alert('Relevé ajouté !'));
+            resetForm({ values: '' });
             //console.log(values)
             //alert(JSON.stringify(values, null, 2));
         },
@@ -70,6 +71,7 @@ export const AjoutReleve = () => {
                             size="small"
                             variant="outlined"
                             label="plateau"
+                            value={formik.values.plateau}
                             onChange={formik.handleChange}
                             name="plateau"
                             required
@@ -84,6 +86,7 @@ export const AjoutReleve = () => {
                         label="Température"
                         variant="outlined"
                         size="small"
+                        value={formik.values.temperature}
                         onChange={formik.handleChange}
                         required
                     />

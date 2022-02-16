@@ -22,10 +22,10 @@ export const AjoutClim = () => {
             etat: '',
 
         },
-        onSubmit: values => {
+        onSubmit: (values, { resetForm }) => {
             axios.post(`${serverUrl}/climatiseur/AjoutClimatiseur`, values)
-                .then(res => console.log(res.data));
-
+                .then(res => alert('Climatiseur ajouté !'));
+            resetForm({ values: '' });
             //console.log(values)
             //alert(JSON.stringify(values, null, 2));
         },
@@ -46,6 +46,7 @@ export const AjoutClim = () => {
                         label="Libellé"
                         variant="outlined"
                         size="small"
+                        value={formik.values.libelle}
                         onChange={formik.handleChange}
                         required
                     />
@@ -58,6 +59,7 @@ export const AjoutClim = () => {
                             size="small"
                             variant="outlined"
                             label="plateau"
+                            value={formik.values.plateau}
                             onChange={formik.handleChange}
                             name="plateau"
                             required
@@ -72,6 +74,7 @@ export const AjoutClim = () => {
                         label="Marque"
                         variant="outlined"
                         size="small"
+                        value={formik.values.marque}
                         onChange={formik.handleChange}
                         required
                     />
@@ -81,6 +84,7 @@ export const AjoutClim = () => {
                         label="Chevaux"
                         variant="outlined"
                         size="small"
+                        value={formik.values.chevaux}
                         onChange={formik.handleChange}
                         required
                     />
@@ -95,6 +99,7 @@ export const AjoutClim = () => {
                                 size="small"
                                 variant="outlined"
                                 label="etat"
+                                value={formik.values.etat}
                                 onChange={formik.handleChange}
                                 name="etat"
                                 required

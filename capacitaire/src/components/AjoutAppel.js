@@ -19,10 +19,10 @@ export const AjoutAppel = () => {
             previsions: '',
 
         },
-        onSubmit: values => {
+        onSubmit: (values, { resetForm }) => {
             axios.post(`${serverUrl}/previsions/Appels/Ajout`, values)
-                .then(res => console.log(res.data));
-
+                .then(res => alert('Prévision appel ajoutée !'));
+            resetForm({ values: '' });
             //console.log(values)
             //alert(JSON.stringify(values, null, 2));
         },
@@ -45,6 +45,7 @@ export const AjoutAppel = () => {
                             size="small"
                             variant="outlined"
                             label="Opération"
+                            value={formik.values.operation}
                             onChange={formik.handleChange}
                             name="operation"
                             required
@@ -59,6 +60,7 @@ export const AjoutAppel = () => {
                         label="Appels"
                         variant="outlined"
                         size="small"
+                        value={formik.values.appels}
                         onChange={formik.handleChange}
                         required
                     />
@@ -69,6 +71,7 @@ export const AjoutAppel = () => {
                         label="Prévisions"
                         variant="outlined"
                         size="small"
+                        value={formik.values.previsions}
                         onChange={formik.handleChange}
                         required
                     />

@@ -26,12 +26,14 @@ export const AjoutCapacitairePlateau = () => {
             positionsOK: '',
 
         },
-        onSubmit: values => {
+        onSubmit: (values, { resetForm }) => {
             var mois = value.getMonth()
             mois += 1
             values.date = value.getDate() + "-" + mois + "-" + value.getFullYear();
             axios.post(`${serverUrl}/capacitairePlateau/AjoutCapacitairePlateau`, values)
-                .then(res => console.log(res.data));
+                .then(res => alert('Capacitaire plateau ajouté !'));
+                
+            resetForm({ values: '' });
             //console.log(values)
             //alert(JSON.stringify(values, null, 2));
         },
@@ -74,6 +76,7 @@ export const AjoutCapacitairePlateau = () => {
                             size="small"
                             variant="outlined"
                             label="plateau"
+                            value={formik.values.plateau}
                             onChange={formik.handleChange}
                             name="plateau"
                             required
@@ -91,6 +94,7 @@ export const AjoutCapacitairePlateau = () => {
                             size="small"
                             variant="outlined"
                             label="site"
+                            value={formik.values.site}
                             onChange={formik.handleChange}
                             name="site"
                             required
@@ -106,6 +110,7 @@ export const AjoutCapacitairePlateau = () => {
                         label="Capacité"
                         variant="outlined"
                         size="small"
+                        value={formik.values.capacite}
                         onChange={formik.handleChange}
                         required
                     />
@@ -116,6 +121,7 @@ export const AjoutCapacitairePlateau = () => {
                         label="Boxes"
                         variant="outlined"
                         size="small"
+                        value={formik.values.boxes}
                         onChange={formik.handleChange}
                         required
                     />
@@ -125,6 +131,7 @@ export const AjoutCapacitairePlateau = () => {
                         label="Positions"
                         variant="outlined"
                         size="small"
+                        value={formik.values.positions}
                         onChange={formik.handleChange}
                         required
                     />
@@ -136,6 +143,7 @@ export const AjoutCapacitairePlateau = () => {
                             label="Positions OK"
                             variant="outlined"
                             size="small"
+                            value={formik.values.positionsOK}
                             onChange={formik.handleChange}
                             required
                         />

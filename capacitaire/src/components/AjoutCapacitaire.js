@@ -19,10 +19,10 @@ export const AjoutCapacitaire = () => {
             previsions: '',
 
         },
-        onSubmit: values => {
+        onSubmit: (values, { resetForm })=> {
             axios.post(`${serverUrl}/previsions/Capacitaire/Ajout`, values)
-                .then(res => console.log(res.data));
-
+                .then(res => alert('Prévision capacitaire ajoutée !'));
+            resetForm({ values: '' });
             //console.log(values)
             //alert(JSON.stringify(values, null, 2));
         },
@@ -45,6 +45,7 @@ export const AjoutCapacitaire = () => {
                             size="small"
                             variant="outlined"
                             label="Opération"
+                            value={formik.values.operation}
                             onChange={formik.handleChange}
                             name="operation"
                             required
@@ -59,6 +60,7 @@ export const AjoutCapacitaire = () => {
                         label="Capacitaire"
                         variant="outlined"
                         size="small"
+                        value={formik.values.capacitaire}
                         onChange={formik.handleChange}
                         required
                     />
@@ -69,6 +71,7 @@ export const AjoutCapacitaire = () => {
                         label="Prévisions"
                         variant="outlined"
                         size="small"
+                        value={formik.values.previsions}
                         onChange={formik.handleChange}
                         required
                     />

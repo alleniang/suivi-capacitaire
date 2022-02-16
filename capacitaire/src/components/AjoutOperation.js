@@ -18,10 +18,10 @@ export const AjoutOperation = () => {
             programme: '',
 
         },
-        onSubmit: values => {
+        onSubmit: (values, { resetForm }) => {
             axios.post(`${serverUrl}/operation/AjoutOperation`, values)
-                .then(res => console.log(res.data));
-
+                .then(res => alert('Opération ajoutée !'));
+            resetForm({ values: '' });
             //console.log(values)
             //alert(JSON.stringify(values, null, 2));
         },
@@ -41,6 +41,7 @@ export const AjoutOperation = () => {
                         label="Libelle"
                         variant="outlined"
                         size="small"
+                        value={formik.values.libelle}
                         onChange={formik.handleChange}
                         required
                     />
@@ -54,6 +55,7 @@ export const AjoutOperation = () => {
                             size="small"
                             variant="outlined"
                             label="programme"
+                            value={formik.values.programme}
                             onChange={formik.handleChange}
                             name="programme"
                             required
